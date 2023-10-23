@@ -11,6 +11,7 @@ input[type="password"] {
 button {
   @apply bg-gray-300;
 }
+
 button.primary {
   background-color: #F5385D;
   @apply p-2 w-full text-white rounded-2xl;
