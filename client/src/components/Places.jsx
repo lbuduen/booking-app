@@ -11,6 +11,10 @@ export default function Places() {
       address: '',
       photoLink: '',
       description: '',
+      extraInfo: '',
+      checkIn: '',
+      checkOut: '',
+      maxGuests: '',
     },
     validationSchema: Yup.object({}),
     onSubmit: (values) => {
@@ -59,7 +63,7 @@ export default function Places() {
           <p className="text-gray-500 text-xs">Description of this place</p>
           <textarea id="description" rows={4} {...formik.getFieldProps("description")} />
 
-          <label htmlFor="description" className="inline-block text-xl mt-4">Perks</label>
+          <label className="inline-block text-xl mt-4">Perks</label>
           <p className="text-gray-500 text-xs">select all the perks of your place</p>
           <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
@@ -99,6 +103,28 @@ export default function Places() {
             </label>
           </div>
 
+          <label htmlFor="extraInfo" className="inline-block text-xl mt-4">Extra info</label>
+          <p className="text-gray-500 text-xs">house rules, etc</p>
+          <textarea id="extraInfo" {...formik.getFieldProps("extraInfo")} />
+
+          <label htmlFor="extraInfo" className="inline-block text-xl mt-4">Check in & out times</label>
+          <p className="text-gray-500 text-xs">add the check in and out times, remember to have some window for cleaning between guests</p>
+          <div className="grid sm:grid-cols-3 mt-2 gap-2">
+            <div>
+              <label htmlFor="checkIn">Check in time</label>
+              <input type="text" id="checkIn" {...formik.getFieldProps("checkIn")} placeholder="14:00" />
+            </div>
+            <div>
+              <label htmlFor="checkOut">Check out time</label>
+              <input type="text" id="checkOut" {...formik.getFieldProps("checkOut")} placeholder="20:00" />
+            </div>
+            <div>
+              <label htmlFor="maxGuests">Max number of guests</label>
+              <input type="number" id="maxGuests" {...formik.getFieldProps("maxGuests")} placeholder="5" />
+            </div>
+          </div>
+
+          <button type="submit" className="primary my-4">Save</button>
         </form>
       )}
     </div>
