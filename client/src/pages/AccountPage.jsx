@@ -1,25 +1,15 @@
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useAsyncValue, useNavigate, useParams } from 'react-router-dom';
+import cookie from 'react-cookies';
 import { useStore } from '../store';
 import Places from '../components/Places';
 
 export default function AccountPage() {
   const navigate = useNavigate()
-  const user = useStore((state) => state.user)
-  const loading = useStore((state) => state.loading)
-  const logout = useStore((state) => state.logout)
+  const {data: user} = useAsyncValue()
 
   let { subpage } = useParams()
   if (subpage === undefined) {
     subpage = 'profile'
-  }
-
-  if (loading) {
-    return 'Loading...'
-  }
-
-  if (!loading && !user) {
-    return <Navigate to='/auth/login' />
   }
 
   const linkClasses = (type = null) => {
@@ -34,12 +24,8 @@ export default function AccountPage() {
   }
 
   const handleLogout = async () => {
-    try {
-      await logout()
-      navigate("/")
-    } catch (error) {
-      alert(error)
-    }
+    cookie.remove("x-access-token", { path: '/' });
+    navigate('/auth/login')
   }
 
   return (

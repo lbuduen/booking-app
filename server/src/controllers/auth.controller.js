@@ -37,22 +37,25 @@ async function login(request, reply) {
 }
 
 async function isUserAuth(request, reply) {
-  const cookie = request.unsignCookie(request.cookies["x-access-token"]);
-  if (!cookie.valid) {
-    return reply.code(403).send({ error: "Invalid access cookie" });
+  if (request.cookies["x-access-token"]) {
+    const cookie = request.unsignCookie(request.cookies["x-access-token"]);
+    if (!cookie.valid) {
+      return reply.code(403).send({ error: "Invalid access cookie" });
+    }
+    const jwtToken = cookie.value;
+    if (!jwtToken) {
+      return reply.code(401).send({ error: "Invalid access token" });
+    }
+    try {
+      const userData = jwt.verify(jwtToken, process.env.DB_SECRET);
+      const user = await User.findById(userData._id);
+      return reply.send(user);
+    } catch (error) {
+      console.log(error);
+      return reply.code(500).send({ error: "Unable to process access data" });
+    }
   }
-  const jwtToken = cookie.value;
-  if (!jwtToken) {
-    return reply.code(401).send({ error: "Invalid access token" });
-  }
-  try {
-    const userData = jwt.verify(jwtToken, process.env.DB_SECRET);
-    const user = await User.findById(userData._id);
-    return reply.send(user);
-  } catch (error) {
-    console.log(error);
-    return reply.code(500).send({ error: "Unable to process access data" });
-  }
+  return reply.code(401).send({ error: "No access cookie" });
 }
 
 async function logout(request, reply) {

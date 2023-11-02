@@ -12,15 +12,8 @@ export const createUserSlice = (set) => ({
       throw error.response.data.error;
     }
   },
-  isAuth: async () => {
-    try {
-      set({ loading: true })
-      const { data } = await axios.get("/api/v1/auth/isauth");
-      set({ loading: false, user: data });
-    } catch (error) {
-      set({ loading: false});
-      throw error.response.data.error;
-    }
+  setloaderUser: async (user) => {
+    set({user});
   },
   logout: async () => {
     try {

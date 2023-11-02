@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
-import { useStore } from '../store';
+import { Link, useAsyncValue } from "react-router-dom";
 
 export default function Header() {
-  const user = useStore((state) => state.user)
+  const {data: user} = useAsyncValue()
 
   return (
     <header className='flex justify-between items-center'>

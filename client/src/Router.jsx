@@ -1,15 +1,25 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, defer } from "react-router-dom";
 import App from "./App";
 import IndexPage from "./pages/IndexPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import AuthLayout from "./pages/AuthLayout";
 import AccountPage from "./pages/AccountPage";
+import axios from "axios";
+
+const isUserAuthLoader = () => {
+  try {
+    return axios.get("/api/v1/auth/isauth");
+  } catch (error) {
+    throw error.response.data.error;
+  }
+}
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <AuthLayout />,
+    loader: () => defer({ userPromise: isUserAuthLoader() }),
     children: [
       { index: true, element: <IndexPage /> },
       { path: "account/:subpage?", element: <AccountPage />, },
@@ -18,7 +28,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    element: <AuthLayout />,
+    element: <App />,
     children: [
       { path: "login", element: <LoginPage />, },
       { path: "register", element: <RegisterPage />, },

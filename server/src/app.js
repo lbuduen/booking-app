@@ -1,6 +1,9 @@
 require("dotenv").config();
 const fastify = require("fastify")({ logger: true });
 const mongoose = require("mongoose");
+const path = require("node:path");
+const multer = require("fastify-multer");
+const upload = multer({ dest: path.join(__dirname, "../uploads/") });
 
 //connect to DB
 mongoose
@@ -14,7 +17,21 @@ fastify.register(require("@fastify/cookie"), {
   parseOptions: {}, // options for parsing cookies
 });
 
+fastify.register(require("@fastify/static"), {
+  root: path.join(__dirname, "../uploads"),
+  prefix: "/uploads/",
+});
+
+fastify.register(multer.contentParser);
+fastify.post(
+  "/api/v1/upload/photos",
+  { preHandler: upload.array("photos") },
+  function (request, reply) {
+    reply.code(200).send({ filenames: request.files.map(file => file.filename) });
+  }
+);
 fastify.register(require("./routes/auth.routes"), { prefix: "/api/v1/auth" });
+fastify.register(require("./routes/place.routes"), { prefix: "/api/v1/place" });
 
 //start server
 async function main() {
