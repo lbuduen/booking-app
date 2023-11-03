@@ -28,6 +28,21 @@ export default function Places() {
     }
   })
 
+  const inputLabel = (text, inputId = null) => (
+    <label htmlFor={inputId} className="inline-block text-xl mt-4">{text}</label>
+  )
+
+  const inputDescription = (text) => (
+    <p className="text-gray-500 text-xs">{text}</p>
+  )
+
+  const inputHeader = (labelText, descText, inputId = null) => (
+    <>
+      {inputLabel(labelText, inputId)}
+      {inputDescription(descText)}
+    </>
+  )
+
   return (
     <div>
       {action !== 'new' && (
@@ -42,24 +57,19 @@ export default function Places() {
       )}
       {action === 'new' && (
         <form onSubmit={formik.handleSubmit}>
-          <label htmlFor="title" className="inline-block text-xl mt-4">Title</label>
-          <p className="text-gray-500 text-xs">Title for your place, should be short and catchy as in advertisement</p>
+          {inputHeader('Title', 'Title for your place, should be short and catchy as in advertisement', "title")}
           <input type="text" id="title" placeholder="My lovely apartament" {...formik.getFieldProps("title")} />
 
-          <label htmlFor="address" className="inline-block text-xl mt-4">Address</label>
-          <p className="text-gray-500 text-xs">Address for this place</p>
+          {inputHeader('Address', 'Address for this place', "address")}
           <input type="text" id="address" placeholder="address" {...formik.getFieldProps("address")} />
 
-          <label htmlFor="photoLink" className="inline-block text-xl mt-4">Photos</label>
-          <p className="text-gray-500 text-xs">more = better</p>
+          {inputHeader('Photos', 'more = better', "photoLink")}
           <PhotoUploader photos={photos} onChangePhotos={setPhotos} />
 
-          <label htmlFor="description" className="inline-block text-xl mt-4">Description</label>
-          <p className="text-gray-500 text-xs">Description of this place</p>
+          {inputHeader('Description', 'Description of this place', "description")}
           <textarea id="description" rows={4} {...formik.getFieldProps("description")} />
 
-          <label className="inline-block text-xl mt-4">Perks</label>
-          <p className="text-gray-500 text-xs">select all the perks of your place</p>
+          {inputHeader('Perks', "Select all the perks of your place")}
           <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             <FormikProvider value={formik}>
               <Perk value="wifi">
@@ -95,12 +105,10 @@ export default function Places() {
             </FormikProvider>
           </div>
 
-          <label htmlFor="extraInfo" className="inline-block text-xl mt-4">Extra info</label>
-          <p className="text-gray-500 text-xs">house rules, etc</p>
+          {inputHeader('Extra info', 'House rules, etc', "extraInfo")}
           <textarea id="extraInfo" {...formik.getFieldProps("extraInfo")} />
 
-          <label htmlFor="extraInfo" className="inline-block text-xl mt-4">Check in & out times</label>
-          <p className="text-gray-500 text-xs">add the check in and out times, remember to have some window for cleaning between guests</p>
+          {inputHeader('Check in & out times', 'Add the check in and out times, remember to have some window for cleaning between guests')}
           <div className="grid sm:grid-cols-3 mt-2 gap-2">
             <div>
               <label htmlFor="checkIn">Check in time</label>
