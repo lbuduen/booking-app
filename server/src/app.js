@@ -27,9 +27,14 @@ fastify.post(
   "/api/v1/upload/photos",
   { preHandler: upload.array("photos") },
   function (request, reply) {
-    reply.code(200).send({ filenames: request.files.map(file => file.filename) });
+    reply
+      .code(200)
+      .send({ filenames: request.files.map((file) => file.filename) });
   }
 );
+
+fastify.register(require("./plugins/addUser2Request"));
+
 fastify.register(require("./routes/auth.routes"), { prefix: "/api/v1/auth" });
 fastify.register(require("./routes/place.routes"), { prefix: "/api/v1/place" });
 

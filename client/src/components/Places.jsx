@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
-import { Link, useParams } from "react-router-dom";
+import { useState } from 'react'
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik, FormikProvider } from "formik";
 import * as Yup from 'yup';
+import axios from 'axios';
 
 import Perk from '../components/Perk'
 import PhotoUploader from './PhotoUploader';
@@ -9,22 +10,27 @@ import PhotoUploader from './PhotoUploader';
 export default function Places() {
   const { action } = useParams()
   const [photos, setPhotos] = useState([])
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: {
       title: '',
       address: '',
-      photoLink: '',
       description: '',
       extraInfo: '',
       checkIn: '',
       checkOut: '',
-      maxGuests: '',
+      maxGuests: 1,
       perks: []
     },
     validationSchema: Yup.object({}),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      try {
+        await axios.post('/api/v1/place', { ...values, photos })
+        navigate('/account/places')
+      } catch (error) {
+        console.error(error)
+      }
     }
   })
 
@@ -63,7 +69,7 @@ export default function Places() {
           {inputHeader('Address', 'Address for this place', "address")}
           <input type="text" id="address" placeholder="address" {...formik.getFieldProps("address")} />
 
-          {inputHeader('Photos', 'more = better', "photoLink")}
+          {inputHeader('Photos', 'more = better')}
           <PhotoUploader photos={photos} onChangePhotos={setPhotos} />
 
           {inputHeader('Description', 'Description of this place', "description")}
@@ -112,11 +118,11 @@ export default function Places() {
           <div className="grid sm:grid-cols-3 mt-2 gap-2">
             <div>
               <label htmlFor="checkIn">Check in time</label>
-              <input type="text" id="checkIn" {...formik.getFieldProps("checkIn")} placeholder="14:00" />
+              <input type="datetime-local" id="checkIn" {...formik.getFieldProps("checkIn")} placeholder="14:00" />
             </div>
             <div>
               <label htmlFor="checkOut">Check out time</label>
-              <input type="text" id="checkOut" {...formik.getFieldProps("checkOut")} placeholder="20:00" />
+              <input type="datetime-local" id="checkOut" {...formik.getFieldProps("checkOut")} placeholder="20:00" />
             </div>
             <div>
               <label htmlFor="maxGuests">Max number of guests</label>

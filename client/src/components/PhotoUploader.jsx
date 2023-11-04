@@ -1,7 +1,7 @@
 import { useRef } from "react"
 import axios from 'axios'
 
-export default function PhotoUploader({photos, setPhotos: onChangePhotos}) {
+export default function PhotoUploader({photos, onChangePhotos}) {
   const photoLinkRef = useRef(null)
 
   const uploadPhotoLink = async () => {
@@ -38,7 +38,7 @@ export default function PhotoUploader({photos, setPhotos: onChangePhotos}) {
   return (
     <>
       <div className="flex gap-2">
-        <input type="text" ref={photoLinkRef} placeholder="Add using a link" />
+        <input type="url" ref={photoLinkRef} placeholder="Add using a link" />
         <button type="button" onClick={uploadPhotoLink} className="bg-gray-200 px-4 rounded-2xl w-32">Add photo</button>
       </div>
       <div className="mt-2 grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">

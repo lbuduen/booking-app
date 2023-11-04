@@ -1,4 +1,5 @@
 const path = require("node:path");
+const Place = require("../models/place.model");
 
 async function uploadPhotoLink(request, reply) {
   const download = require("image-downloader");
@@ -17,6 +18,20 @@ async function uploadPhotoLink(request, reply) {
   }
 }
 
+async function createPlace(request, reply) {
+  if (request.userId) {
+    try {
+      const place = new Place({ ...request.body, owner: request.userId });
+      const res = await place.save();
+      return reply.send(res);
+    } catch (error) {
+      return reply.status(422).send(error);
+    }
+  }
+  return reply.status(401);
+}
+
 module.exports = {
   uploadPhotoLink,
+  createPlace,
 };

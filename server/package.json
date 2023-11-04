@@ -20,6 +20,7 @@
     "dotenv": "^16.3.1",
     "fastify": "^4.24.3",
     "fastify-multer": "^2.0.3",
+    "fastify-plugin": "^4.5.1",
     "image-downloader": "^4.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.6.3"
