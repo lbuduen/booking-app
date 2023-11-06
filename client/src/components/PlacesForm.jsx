@@ -1,35 +1,64 @@
+import { useEffect, useState } from "react"
 import { useFormik, FormikProvider } from "formik"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import * as Yup from 'yup';
 import axios from 'axios';
+import { DateTime } from "luxon";
 
 import Perk from './Perk'
 import PhotoUploader from './PhotoUploader';
 
 export default function PlacesForm() {
   const [photos, setPhotos] = useState([])
+  const [formData, setFormData] = useState({
+    title: '',
+    address: '',
+    description: '',
+    extraInfo: '',
+    checkIn: '',
+    checkOut: '',
+    maxGuests: 1,
+    perks: []
+  })
+  const { action: id } = useParams()
   const navigate = useNavigate()
 
+  useEffect(() => {
+    const getPlaceById = async (id) => {
+      try {
+        const { data } = await axios.get('/api/v1/places/' + id)
+        data['checkIn'] = DateTime.fromISO(data['checkIn']).toFormat("yyyy-LL-dd'T'hh:mm");
+        data['checkOut'] = DateTime.fromISO(data['checkOut']).toFormat("yyyy-LL-dd'T'hh:mm");
+        setFormData(data)
+        setPhotos(data['photos'])
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (id !== 'new') {
+      getPlaceById(id)
+    }
+  }, [id])
+
   const formik = useFormik({
-    initialValues: {
-      title: '',
-      address: '',
-      description: '',
-      extraInfo: '',
-      checkIn: '',
-      checkOut: '',
-      maxGuests: 1,
-      perks: []
-    },
+    enableReinitialize: true,
+    initialValues: formData,
     validationSchema: Yup.object({}),
     onSubmit: async (values) => {
-      try {
-        await axios.post('/api/v1/place', { ...values, photos })
-        navigate('/account/places')
-      } catch (error) {
-        console.error(error)
+      if (id === 'new') {
+        try {
+          await axios.post('/api/v1/places', { ...values, photos })
+        } catch (error) {
+          console.error(error)
+        }
+      } else {
+        try {
+          await axios.put('/api/v1/places/' + id, { ...values, photos })
+        } catch (error) {
+          console.error(error)
+        }
       }
+      navigate('/account/places')
     }
   })
 

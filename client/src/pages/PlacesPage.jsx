@@ -7,7 +7,7 @@ export default function PlacesPage() {
 
   return (
     <div>
-      {action !== 'new' && (
+      {!action && (
         <>
           <div className="text-center">
             <Link className="inline-flex gap-1 bg-primary text-white py-2 px-4 rounded-full" to={'/account/places/new'}>
@@ -20,7 +20,7 @@ export default function PlacesPage() {
           <PlacesList />
         </>
       )}
-      {action === 'new' && (
+      {action && (
         <PlacesForm />
       )}
     </div>

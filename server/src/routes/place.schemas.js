@@ -1,4 +1,4 @@
-const createPlaceOpts = {
+const placeOpts = {
   schema: {
     body: {
       type: "object",
@@ -25,5 +25,5 @@ const createPlaceOpts = {
 };
 
 module.exports = {
-  createPlaceOpts,
+  placeOpts,
 };

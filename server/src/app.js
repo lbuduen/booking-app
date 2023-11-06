@@ -36,7 +36,7 @@ fastify.post(
 fastify.register(require("./plugins/addUser2Request"));
 
 fastify.register(require("./routes/auth.routes"), { prefix: "/api/v1/auth" });
-fastify.register(require("./routes/place.routes"), { prefix: "/api/v1/place" });
+fastify.register(require("./routes/place.routes"), { prefix: "/api/v1/places" });
 
 //start server
 async function main() {

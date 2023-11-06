@@ -31,7 +31,54 @@ async function createPlace(request, reply) {
   return reply.status(401);
 }
 
+async function getAllPlaces(request, reply) {
+  if (request.userId) {
+    try {
+      const places = await Place.find({ owner: request.userId });
+      return reply.send(places);
+    } catch (error) {
+      reply.status(500).send(error);
+    }
+  }
+  return reply.status(401);
+}
+
+async function getPlaceById(request, reply) {
+  try {
+    const place = await Place.findById(request.params.id);
+    if (place) {
+      return reply.send(place);
+    }
+    return reply.status(404);
+  } catch (error) {
+    reply.status(500).send(error);
+  }
+}
+
+async function updatePlace(request, reply) {
+  if (request.userId && request.userId === request.body.owner) {
+    delete request.body.owner;
+    try {
+      const place = await Place.findByIdAndUpdate(
+        request.params.id,
+        request.body,
+        { new: true }
+      );
+      if (place) {
+        return reply.send(place);
+      }
+      return reply.status(404);
+    } catch (error) {
+      reply.status(500).send(error);
+    }
+  }
+  return reply.status(401);
+}
+
 module.exports = {
   uploadPhotoLink,
   createPlace,
+  getAllPlaces,
+  getPlaceById,
+  updatePlace,
 };
