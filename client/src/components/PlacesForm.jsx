@@ -19,7 +19,7 @@ export default function PlacesForm() {
     checkOut: '',
     maxGuests: 1,
     perks: [],
-    price: 0,
+    price: 100,
   })
   const { action: id } = useParams()
   const navigate = useNavigate()

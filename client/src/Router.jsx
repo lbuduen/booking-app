@@ -6,6 +6,7 @@ import RegisterPage from "./pages/RegisterPage";
 import AuthLayout from "./pages/AuthLayout";
 import AccountPage from "./pages/AccountPage";
 import axios from "axios";
+import PlacePage from "./pages/PlacePage";
 
 const isUserAuthLoader = () => {
   try {
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { index: true, element: <IndexPage /> },
       { path: "account/:subpage?", element: <AccountPage />, },
       { path: "account/:subpage/:action", element: <AccountPage />, },
+      { path: "place/:id", element: <PlacePage />, },
     ]
   },
   {

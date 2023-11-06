@@ -21,12 +21,12 @@ export default function PlacesList() {
     <div className="mt-4">
       {places.length > 0 && places.map(place => (
         <Link to={`/account/places/${place._id}`} key={place._id} className="bg-gray-100 p-4 my-2 rounded-2xl flex gap-4 items-center cursor-pointer">
-          <div className="w-32 bg-gray-300 grow shrink-0">
+          <div className="w-1/3 bg-gray-300">
             {place.photos.length > 0 && (
-              <img src={`http://localhost:5000/uploads/${place.photos[0]}`} alt="" />
+              <img src={`http://localhost:5000/uploads/${place.photos[0]}`} className="object-cover" alt="" />
             )}
           </div>
-          <div className="grow-0 shrink">
+          <div className="w-2/3">
             <h2 className="text-xl">{place.title}</h2>
             <p className="text-sm mt-2">{place.description}</p>
           </div>
