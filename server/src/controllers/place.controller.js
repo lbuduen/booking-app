@@ -31,7 +31,7 @@ async function createPlace(request, reply) {
   return reply.status(401);
 }
 
-async function getAllPlaces(request, reply) {
+async function getAllUserPlaces(request, reply) {
   if (request.userId) {
     try {
       const places = await Place.find({ owner: request.userId });
@@ -41,6 +41,14 @@ async function getAllPlaces(request, reply) {
     }
   }
   return reply.status(401);
+}
+
+async function getAllPlaces(request, reply) {
+  try {
+    return reply.send(await Place.find());
+  } catch (error) {
+    reply.status(500).send(error);
+  }
 }
 
 async function getPlaceById(request, reply) {
@@ -79,6 +87,7 @@ module.exports = {
   uploadPhotoLink,
   createPlace,
   getAllPlaces,
+  getAllUserPlaces,
   getPlaceById,
   updatePlace,
 };

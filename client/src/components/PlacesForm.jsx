@@ -18,7 +18,8 @@ export default function PlacesForm() {
     checkIn: '',
     checkOut: '',
     maxGuests: 1,
-    perks: []
+    perks: [],
+    price: 0,
   })
   const { action: id } = useParams()
   const navigate = useNavigate()
@@ -90,6 +91,9 @@ export default function PlacesForm() {
 
       {inputHeader('Description', 'Description of this place', "description")}
       <textarea id="description" rows={4} {...formik.getFieldProps("description")} />
+
+      {inputHeader('Price per night', 'Price of this place per night', "price")}
+      <input type="number" id="price" {...formik.getFieldProps("price")} />
 
       {inputHeader('Perks', "Select all the perks of your place")}
       <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">

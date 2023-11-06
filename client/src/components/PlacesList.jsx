@@ -8,7 +8,7 @@ export default function PlacesList() {
   useEffect(() => {
     const getAllPlaces = async () => {
       try {
-        const { data } = await axios.get('/api/v1/places')
+        const { data } = await axios.get('/api/v1/places/user')
         setPlaces(data)
       } catch (error) {
         console.error(error);

@@ -41,7 +41,7 @@ export default function PhotoUploader({ photos, onChangePhotos }) {
 
   const setAsMainPhoto = (filename) => {
     const nextPhotos = [...photos]
-    nextPhotos.splice(nextPhotos.indexOf(filename), 1)[0]
+    nextPhotos.splice(nextPhotos.indexOf(filename), 1)
     onChangePhotos([filename, ...nextPhotos])
   }
 
