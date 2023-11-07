@@ -1,25 +1,29 @@
-import axios from "axios"
-import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
+import axios from "axios"
+import topbar from "topbar"
 
 export default function PlacesList() {
-  const [places, setPlaces] = useState([])
-
-  useEffect(() => {
-    const getAllPlaces = async () => {
-      try {
-        const { data } = await axios.get('/api/v1/places/user')
-        setPlaces(data)
-      } catch (error) {
-        console.error(error);
-      }
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ['places', 'user'], queryFn: async () => {
+      const { data } = await axios.get('/api/v1/places/user')
+      return data
     }
-    getAllPlaces()
-  }, [])
+  })
+
+  if (isPending) {
+    return topbar.show()
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>
+  }
+
+  topbar.hide()
 
   return (
     <div className="mt-4">
-      {places.length > 0 && places.map(place => (
+      {data.length > 0 && data.map(place => (
         <Link to={`/account/places/${place._id}`} key={place._id} className="bg-gray-100 p-4 my-2 rounded-2xl flex gap-4 items-center cursor-pointer">
           <div className="w-1/3 bg-gray-300">
             {place.photos.length > 0 && (

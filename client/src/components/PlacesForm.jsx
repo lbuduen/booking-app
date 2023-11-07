@@ -1,64 +1,68 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useFormik, FormikProvider } from "formik"
 import { useNavigate, useParams } from "react-router-dom"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { DateTime } from "luxon";
 import * as Yup from 'yup';
 import axios from 'axios';
-import { DateTime } from "luxon";
+import topbar from "topbar";
 
 import Perk from './Perk'
 import PhotoUploader from './PhotoUploader';
 
+const initialData = {
+  title: '',
+  address: '',
+  description: '',
+  extraInfo: '',
+  checkIn: '',
+  checkOut: '',
+  maxGuests: 1,
+  perks: [],
+  price: 100,
+}
+
 export default function PlacesForm() {
-  const [photos, setPhotos] = useState([])
-  const [formData, setFormData] = useState({
-    title: '',
-    address: '',
-    description: '',
-    extraInfo: '',
-    checkIn: '',
-    checkOut: '',
-    maxGuests: 1,
-    perks: [],
-    price: 100,
-  })
   const { action: id } = useParams()
   const navigate = useNavigate()
+  const [photos, setPhotos] = useState([])
 
-  useEffect(() => {
-    const getPlaceById = async (id) => {
-      try {
+  const queryClient = useQueryClient()
+  const query = useQuery({
+    queryKey: ['place', id], queryFn: async () => {
+      if (id !== 'new') {
         const { data } = await axios.get('/api/v1/places/' + id)
         data['checkIn'] = DateTime.fromISO(data['checkIn']).toFormat("yyyy-LL-dd'T'hh:mm");
         data['checkOut'] = DateTime.fromISO(data['checkOut']).toFormat("yyyy-LL-dd'T'hh:mm");
-        setFormData(data)
-        setPhotos(data['photos'])
-      } catch (error) {
-        console.error(error);
+        setPhotos(data.photos)
+        return data
       }
-    }
-    if (id !== 'new') {
-      getPlaceById(id)
-    }
-  }, [id])
+      return false
+    },
+  })
+
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      const method = data?._id ? 'put' : 'post'
+      const url = data?._id ? '/api/v1/places/' + data._id : '/api/v1/places'
+      return axios({
+        method, url, data
+      });
+    },
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: ['places', 'user'] })
+      if (id !== 'new') {
+        queryClient.setQueryData(['place', id], data)
+      }
+    },
+  })
 
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: formData,
+    initialValues: query.data || initialData,
     validationSchema: Yup.object({}),
     onSubmit: async (values) => {
-      if (id === 'new') {
-        try {
-          await axios.post('/api/v1/places', { ...values, photos })
-        } catch (error) {
-          console.error(error)
-        }
-      } else {
-        try {
-          await axios.put('/api/v1/places/' + id, { ...values, photos })
-        } catch (error) {
-          console.error(error)
-        }
-      }
+      mutation.mutate({ ...values, photos })
       navigate('/account/places')
     }
   })
@@ -77,6 +81,17 @@ export default function PlacesForm() {
       {inputDescription(descText)}
     </>
   )
+
+  if (query.isPending || mutation.isPending) {
+    return topbar.show()
+  }
+
+  topbar.hide()
+
+  if (query.isError) {
+    return <span>Error: {query.error.message}</span>
+  }
+
 
   return (
     <form onSubmit={formik.handleSubmit}>
