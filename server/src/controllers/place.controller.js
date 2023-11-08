@@ -40,7 +40,7 @@ async function getAllUserPlaces(request, reply) {
       reply.status(500).send(error);
     }
   }
-  return reply.status(401);
+  return reply.status(401).raw.end();
 }
 
 async function getAllPlaces(request, reply) {

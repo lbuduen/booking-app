@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import { toast } from "react-toastify";
 import * as Yup from 'yup';
 
 import { useStore } from '../store';
@@ -23,7 +24,7 @@ export default function LoginPage() {
         await login(values);
         navigate("/");
       } catch (error) {
-        alert(error)
+        toast.error(error)
       }
     }
   });

@@ -6,9 +6,11 @@ import { DateTime } from "luxon";
 import * as Yup from 'yup';
 import axios from 'axios';
 import topbar from "topbar";
+import { toast } from "react-toastify";
 
 import Perk from './Perk'
 import PhotoUploader from './PhotoUploader';
+import { QueryError } from "../utils/tools";
 
 const initialData = {
   title: '',
@@ -49,11 +51,12 @@ export default function PlacesForm() {
         method, url, data
       });
     },
-    onSuccess: data => {
+    onSuccess: ({ data }) => {
       queryClient.invalidateQueries({ queryKey: ['places', 'user'] })
       if (id !== 'new') {
         queryClient.setQueryData(['place', id], data)
       }
+      toast.success(`${data.title} data has been saved successfully`)
     },
   })
 
@@ -88,8 +91,9 @@ export default function PlacesForm() {
 
   topbar.hide()
 
-  if (query.isError) {
-    return <span>Error: {query.error.message}</span>
+  if (query.isError || mutation.isPending) {
+    const error = query.isError ? query.error : mutation.error
+    return <QueryError error={error} />
   }
 
 

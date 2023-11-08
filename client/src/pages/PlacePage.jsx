@@ -2,6 +2,7 @@ import axios from "axios"
 import { useParams } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query";
 import topbar from 'topbar'
+import { QueryError } from "../utils/tools";
 
 export default function PlacePage() {
   const { id } = useParams()
@@ -16,11 +17,11 @@ export default function PlacePage() {
     return topbar.show()
   }
 
-  if (isError) {
-    return <span>Error: {error.message}</span>
-  }
-
   topbar.hide()
+
+  if (isError) {
+    return <QueryError error={error} />
+  }
 
   return (
     <div className="mt-4 bg-gray-100 -mx-8 px-8 py-8">

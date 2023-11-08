@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import axios from "axios"
 import topbar from "topbar"
+import { QueryError } from "../utils/tools"
 
 export default function PlacesList() {
   const { isPending, isError, data, error } = useQuery({
@@ -15,11 +16,11 @@ export default function PlacesList() {
     return topbar.show()
   }
 
-  if (isError) {
-    return <span>Error: {error.message}</span>
-  }
-
   topbar.hide()
+
+  if (isError) {
+    return <QueryError error={error} />
+  }
 
   return (
     <div className="mt-4">
