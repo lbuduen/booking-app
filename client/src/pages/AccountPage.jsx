@@ -1,7 +1,7 @@
 import { Link, useAsyncValue, useNavigate, useParams } from 'react-router-dom';
 import cookie from 'react-cookies';
-import { useStore } from '../store';
 import PlacesPage from './PlacesPage';
+import BookingsPage from './BookingsPage';
 
 export default function AccountPage() {
   const navigate = useNavigate()
@@ -58,6 +58,10 @@ export default function AccountPage() {
           Logged in as {user.name} ({user.email}) <br />
           <button className='primary max-w-xs mt-2' onClick={handleLogout}>Logout</button>
         </div>
+      )}
+
+      {subpage === 'bookings' && (
+        <BookingsPage />
       )}
 
       {subpage === 'places' && (

@@ -39,6 +39,9 @@ fastify.register(require("./routes/auth.routes"), { prefix: "/api/v1/auth" });
 fastify.register(require("./routes/place.routes"), {
   prefix: "/api/v1/places",
 });
+fastify.register(require("./routes/booking.routes"), {
+  prefix: "/api/v1/bookings",
+});
 
 //start server
 async function main() {

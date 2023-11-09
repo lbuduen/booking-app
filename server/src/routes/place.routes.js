@@ -1,5 +1,5 @@
 const placeController = require("../controllers/place.controller");
-const { placeOpts } = require("./place.schemas");
+const { placeOpts, bookingOpts } = require("./place.schemas");
 
 async function routes(fastify, options) {
   fastify.post("/upload-photo-link", placeController.uploadPhotoLink);

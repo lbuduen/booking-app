@@ -9,6 +9,7 @@ input[type="password"],
 input[type="date"],
 input[type="datetime-local"],
 input[type="url"],
+input[type="tel"],
 textarea {
   @apply w-full border my-1 py-2 px-3 rounded-2xl;
 }

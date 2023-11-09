@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import axios from "axios"
 import topbar from "topbar"
 import { QueryError } from "../utils/tools"
+import PlaceImg from "./PlaceImg"
 
 export default function PlacesList() {
   const { isPending, isError, data, error } = useQuery({
@@ -27,9 +28,7 @@ export default function PlacesList() {
       {data.length > 0 && data.map(place => (
         <Link to={`/account/places/${place._id}`} key={place._id} className="bg-gray-100 p-4 my-2 rounded-2xl flex gap-4 items-center cursor-pointer">
           <div className="w-1/3 bg-gray-300">
-            {place.photos.length > 0 && (
-              <img src={`http://localhost:5000/uploads/${place.photos[0]}`} className="object-cover" alt="" />
-            )}
+            <PlaceImg place={place} i={0} />
           </div>
           <div className="w-2/3">
             <h2 className="text-xl">{place.title}</h2>

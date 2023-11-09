@@ -14,7 +14,7 @@ export default function PhotosViewer({data, showPhotos}) {
         {
           data?.photos?.length > 0 && data.photos.map(photo => (
             <div key={photo}>
-              <img src={`http://localhost:5000/uploads/${photo}`} alt="" />
+              <img className="w-5/6 mx-auto" src={`http://localhost:5000/uploads/${photo}`} alt="" />
             </div>
           ))
         }

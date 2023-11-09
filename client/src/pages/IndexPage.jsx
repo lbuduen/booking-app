@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios"
 import topbar from "topbar";
+import { QueryError } from "../utils/tools";
 
 export default function IndexPage() {
   const { isPending, isError, data, error } = useQuery({
@@ -14,12 +15,13 @@ export default function IndexPage() {
   if (isPending) {
     return topbar.show()
   }
+  
+  topbar.hide()
 
   if (isError) {
-    return <span>Error: {error.message}</span>
+    return <QueryError error={error} />
   }
 
-  topbar.hide()
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-8 mt-8">
