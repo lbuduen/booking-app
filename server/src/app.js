@@ -22,15 +22,17 @@ fastify.register(require("@fastify/static"), {
   prefix: "/uploads/",
 });
 
-fastify.register(require("@fastify/static"), {
-  root: path.join(__dirname, "../../client/dist/assets"),
-  prefix: "/assets/",
-  decorateReply: false,
-});
+if (process.env.NODE_ENV === "production") {
+  fastify.register(require("@fastify/static"), {
+    root: path.join(__dirname, "../../client/dist/assets"),
+    prefix: "/assets/",
+    decorateReply: false,
+  });
 
-fastify.get("/", function (req, reply) {
-  reply.sendFile("index.html", path.join(__dirname, "../../client/dist"));
-});
+  fastify.get("/", function (req, reply) {
+    reply.sendFile("index.html", path.join(__dirname, "../../client/dist"));
+  });
+}
 
 fastify.register(multer.contentParser);
 fastify.post(
