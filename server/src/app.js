@@ -58,7 +58,9 @@ fastify.register(require("./routes/booking.routes"), {
 //start server
 async function main() {
   try {
-    await fastify.listen({ port: process.env.PORT || 5000 });
+    const port = process.env.PORT || 5000;
+    const host = "RENDER" in process.env ? `0.0.0.0` : `localhost`;
+    await fastify.listen({ host, port });
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
