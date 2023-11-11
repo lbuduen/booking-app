@@ -57,6 +57,7 @@ export default function PlacesForm() {
         queryClient.setQueryData(['place', id], data)
       }
       toast.success(`${data.title} data has been saved successfully`)
+      navigate('/account/places')
     },
   })
 
@@ -66,7 +67,6 @@ export default function PlacesForm() {
     validationSchema: Yup.object({}),
     onSubmit: async (values) => {
       mutation.mutate({ ...values, photos })
-      navigate('/account/places')
     }
   })
 
@@ -86,19 +86,15 @@ export default function PlacesForm() {
   )
 
   if (query.isPending || mutation.isPending) {
-    return topbar.show()
+    topbar.show()
+  } else {
+    topbar.hide()
   }
-
-  topbar.hide()
-
-  if (query.isError || mutation.isPending) {
-    const error = query.isError ? query.error : mutation.error
-    return <QueryError error={error} />
-  }
-
 
   return (
     <form onSubmit={formik.handleSubmit}>
+      {(query.isError || mutation.isError) && <QueryError error={query.error || mutation.error} />}
+
       {inputHeader('Title', 'Title for your place, should be short and catchy as in advertisement', "title")}
       <input type="text" id="title" placeholder="My lovely apartament" {...formik.getFieldProps("title")} />
 

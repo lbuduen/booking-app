@@ -31,7 +31,7 @@ async function login(request, reply) {
       })
       .send(user);
   } catch (error) {
-    console.error(error);
+    request.log.error(error);
     return reply.code(500).send({ error: "An error occurred during login" });
   }
 }
@@ -45,11 +45,11 @@ async function isUserAuth(request, reply) {
       }
       return reply.send(user);
     } catch (error) {
-      console.log(error);
+      request.log.log(error);
       return reply.code(500).send({ error: "Unable to process access data" });
     }
   }
-  return reply.code(401).send({ error: "Unable to process access cookie" });
+  return reply.code(401).send({ error: "Unable to process access cookie, please log in" });
 }
 
 module.exports = {

@@ -13,7 +13,7 @@ async function uploadPhotoLink(request, reply) {
     const image = await download.image(options);
     return reply.send({ filename: path.basename(image.filename) });
   } catch (error) {
-    console.error(error);
+    request.log.error(error);
     return reply.code(500).send({ error: "Unable to upload photo link" });
   }
 }
@@ -25,10 +25,10 @@ async function createPlace(request, reply) {
       const res = await place.save();
       return reply.send(res);
     } catch (error) {
-      return reply.status(422).send(error);
+      return reply.status(500).send(error);
     }
   }
-  return reply.status(401);
+  return reply.status(401).raw.end();
 }
 
 async function getAllUserPlaces(request, reply) {
@@ -57,7 +57,7 @@ async function getPlaceById(request, reply) {
     if (place) {
       return reply.send(place);
     }
-    return reply.status(404);
+    return reply.status(404).send({ error: "Place not found" });
   } catch (error) {
     reply.status(500).send(error);
   }
@@ -75,12 +75,12 @@ async function updatePlace(request, reply) {
       if (place) {
         return reply.send(place);
       }
-      return reply.status(404);
+      return reply.status(404).send({ error: "Place not found" });
     } catch (error) {
       reply.status(500).send(error);
     }
   }
-  return reply.status(401);
+  return reply.status(401).raw.end();
 }
 
 module.exports = {

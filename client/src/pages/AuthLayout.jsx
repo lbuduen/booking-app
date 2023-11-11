@@ -1,6 +1,7 @@
 import { Await, Navigate, Outlet, useLoaderData } from "react-router-dom";
 import { Suspense } from "react";
 import Header from "../components/Header";
+import { QueryError } from "../utils/tools";
 
 export default function AuthLayout() {
   const { userPromise } = useLoaderData()
@@ -9,7 +10,7 @@ export default function AuthLayout() {
     <Suspense fallback={'Loading...'}>
       <Await
         resolve={userPromise}
-        errorElement={<Navigate to='/auth/login' />}
+        errorElement={<QueryError />}
       >
         {() => (
           <>

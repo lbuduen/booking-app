@@ -7,10 +7,10 @@ async function bookPlace(request, reply) {
       const res = await booking.save();
       return reply.send(res);
     } catch (error) {
-      return reply.status(422).send(error);
+      return reply.status(500).send(error);
     }
   }
-  return reply.status(401);
+  return reply.status(401).raw.end();
 }
 
 async function getAllBookings(request, reply) {
@@ -23,19 +23,19 @@ async function getAllBookings(request, reply) {
       return reply.status(500).send(error);
     }
   }
-  return reply.status(401);
+  return reply.status(401).raw.end();
 }
 
 async function getBookingById(request, reply) {
   if (!request.userId) {
-    return reply.status(401);
+    return reply.status(401).raw.end();
   }
   try {
     const booking = await Booking.findById(request.params.id).populate("place");
     if (booking) {
       return reply.send(booking);
     }
-    return reply.status(404);
+    return reply.status(404).send({ error: "Booking not found" });
   } catch (error) {
     return reply.status(500).send(error);
   }

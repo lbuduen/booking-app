@@ -14,7 +14,7 @@ module.exports = fastifyPlugin(async function (fastify, opts) {
             const userData = jwt.verify(jwtToken, process.env.DB_SECRET);
             request.userId = userData._id;
           } catch (error) {
-            console.error(error);
+            fastify.log.error(error);
           }
         }
       }
