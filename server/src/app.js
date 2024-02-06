@@ -22,18 +22,6 @@ fastify.register(require("@fastify/static"), {
   prefix: "/uploads/",
 });
 
-if (process.env.NODE_ENV === "production") {
-  fastify.register(require("@fastify/static"), {
-    root: path.join(__dirname, "../../client/dist/assets"),
-    prefix: "/assets/",
-    decorateReply: false,
-  });
-
-  fastify.get("/", function (req, reply) {
-    reply.sendFile("index.html", path.join(__dirname, "../../client/dist"));
-  });
-}
-
 fastify.register(multer.contentParser);
 fastify.post(
   "/api/v1/upload/photos",
@@ -55,6 +43,17 @@ fastify.register(require("./routes/booking.routes"), {
   prefix: "/api/v1/bookings",
 });
 
+if (process.env.NODE_ENV === "production") {
+  fastify.register(require("@fastify/static"), {
+    root: path.join(__dirname, "../../client/dist/assets"),
+    prefix: "/assets/",
+    decorateReply: false,
+  });
+
+  fastify.get("*", function (req, reply) {
+    reply.sendFile("index.html", path.join(__dirname, "../../client/dist"));
+  });
+}
 //start server
 async function main() {
   try {
