@@ -15,7 +15,7 @@ export default function IndexPage() {
   if (isPending) {
     return topbar.show()
   }
-  
+
   topbar.hide()
 
   if (isError) {
